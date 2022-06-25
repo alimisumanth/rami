@@ -35,6 +35,8 @@ jobs:
     if: github.ref == 'refs/heads/master'
     steps:
      # Step 1
+      - name: Checkout source code
+        uses: actions/checkout@v2
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
       - name: Configure AWS credentials
