@@ -35,7 +35,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
     steps:
      # Step 1
-      -name: Generate deployment package
+      - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
