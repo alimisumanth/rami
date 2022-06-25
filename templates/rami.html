@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>rami</title>
+        <style>
+        img{
+            width: 149px;
+            height: 149px;
+        }
+    </style>
+</head>
+
+<body>
+<h1 style="color: #0c0c0c;font-weight: bold;text-align: center">{{ vertical }}</h1>
+<div style="background-image: url('{% static "images/"%}{{ vertical }}.png') ; width: 2000px;height:1080px;padding-top: 20px;padding-left:10px;padding-right: 10px ">
+{% if res %}
+    {% for i in res %}
+  <img src=" {% static 'images/' %}{{ i }}.png " alt="{{ i }} "  style="padding: 13px" >
+    {% endfor %}
+{% endif %}
+</div>
+</body>
+</html>
