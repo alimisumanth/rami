@@ -43,10 +43,12 @@ jobs:
           aws-region: us-east-2
      # Step 2
       - name: Create CodeDeploy Deployment
-        id: deploy
-        run: |
-          aws deploy create-deployment \
-            --application-name Rami \
-            --deployment-group-name development_group \
-            --deployment-config-name CodeDeployDefault.OneAtATime \
-            --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
+        uses: einaregilsson/beanstalk-deploy@v14
+        with:
+            aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            application_name: birds-classifier-api
+            environment_name: Birdsclassifierapi-env
+            version_label: "birds-classifier-api-${{ steps.format-time.outputs.replaced }}"
+            region: us-east-2
+            deployment_package: deploy.zip
