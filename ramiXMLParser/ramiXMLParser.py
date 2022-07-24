@@ -7,7 +7,7 @@ Created by: ASK
 
 Project Name: Rami
 
-File Name: ramiXMLParser.py
+File Name: parse.py
 
 Description:
 
@@ -18,6 +18,10 @@ Revision:
 =============================================================================
 """
 import xml.etree.ElementTree as ET
+
+device_codes = {"Appliances": "AP", "Buildings": "BU", "Boiler": "BO", "Heating": "HE", "Lighting": "LI",
+                "Motors": "MO", "RoboticArms": "RA", "RollerBelts": "RB", "SecurityDevices": "SD", "New": "NW",
+                "Trucks": "TR", "Berths": "BE", "QuayCranes": 'QC'}
 
 
 def getVertical(obj):
@@ -34,7 +38,7 @@ def getVertical(obj):
     return root, vertical
 
 
-def ramiXMLParser(document):
+def parse(document):
     path = f'uploads/{document}'
 
     document = ET.parse(path)
@@ -51,3 +55,14 @@ def ramiXMLParser(document):
         devices[item[0]] = item[1]
 
     return vertical, devices
+
+
+def getLabels(devices):
+    count = {}
+    for i in set(devices):
+        count[i] = 0
+    label = []
+    for i in devices:
+        count[i] = int(count[i]) + 1
+        label.append(f"{device_codes[i]}{(3 - len(str(count[i]))) * '0'}{count[i]}")
+    return label

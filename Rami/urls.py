@@ -21,4 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index,name="index"),
     path('rami/', views.ramiParser, name="ramiParser"),
+    path('rami/<kpi>', views.ramikpi, name="ramikpi"),
+    path('widget/', views.widgetkpi, name='widget'),
+    path('widget/<kpi>', views.kpidef, name='kpi'),
 ]

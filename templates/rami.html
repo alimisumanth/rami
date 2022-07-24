@@ -14,11 +14,21 @@
 
 <body>
 <h1 style="color: #0c0c0c;font-weight: bold;text-align: center">{{ vertical }}</h1>
-<div style="background-image: url('{% static "images/"%}{{ vertical }}.png') ; width: 2000px;height:1080px;padding-top: 20px;padding-left:10px;padding-right: 10px ">
-{% if res %}
-    {% for i in res %}
-  <img src=" {% static 'images/' %}{{ i }}.png " alt="{{ i }} "  style="padding: 13px" >
+{% if summary %}
+    <h3>Processed List Of Assets</h3>
+{% for i in summary %}
+    <h3 >{{ i }}</h3>
+{% endfor %}
+{% endif %}
+<div style="background-image: url('{% static "images/"%}{{ vertical }}.png') ; padding-top: 20px;padding-left:10px;padding-right: 10px ">
+{% if devices %}
+    {% for i,j in devices %}
+        <a href="{{ j }}"> <img src=" {% static 'images/' %}{{ i }}.png " style="padding: 13px" alt= "{{ i }}" title="{{ j }}"></a>
+
     {% endfor %}
+{% endif %}
+{% if new_device %}
+    <h3 >Device {{ new_device }} not found</h3>
 {% endif %}
 </div>
 </body>
