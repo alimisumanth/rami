@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+.kpidiv{
+            display: inline-block;
+        }
+.box {
+  float: left;
+  height: 20px;
+  width: 20px;
+  margin-bottom: 15px;
+  border: 1px solid black;
+  clear: both;
+}
+
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: green;
+}
+
+.blue {
+  background-color: blue;
+}
+        .instrument{
+
+            display: inline-block;
+            margin: 15px;
+            width: 65%;
+            align-items: center;
+            text-align: center;
+            height: 750px;
+
+        }
+        .kpidivs{
+    width: 30%;
+    display: inline-block;
+}
+         img{
+            width: 300px;
+            height:200px;
+             margin: 10px;
+        }
+        </style>
+     <script>
+      window.onload = function() {
+        let prices = {"Productivity":[{value:1,desc:"Total Throughput"},{value:2,desc:"Mean Throughput "}],
+             "Efficiency":[{value:1,desc:"Total Fuel Efficiency"},{value:2,desc:"Operational Fuel Efficiency"}],
+             "Asset Lifetime":[{value:1,desc:"Total Failures"},{value:2,desc:"Mean Time Between Failures"},{value:3,desc:"Mean Time to Repair"}],
+            "Cost":[{value:1,desc:"Cost of Repair"},{value:2,desc:"Mean Cost to Repair"},
+                {value:3,desc:"Fuel expenses"},{value:4,desc:"Production cost"},{value:5,desc:"Miscellaneous"}],
+              "Select":[{value:1,desc:"-------"}],
+        }
+          document.getElementsByName('OKR')[0].addEventListener('change', function(e) {
+          document.getElementsByName('KPIs')[0].innerHTML = prices[this.value].reduce((acc, elem) => `${acc}<option value="${elem.value}">${elem.desc}</option>`, "");
+        });
+      }</script>
+</head>
+<body>
+<div>
+    <h4 style="text-align: center">Widget</h4>
+</div>
+<div style="height: 125px; width: 100%">
+    <div style="display: inline-block;">
+        <form>
+            <label>OKR:
+            <select name="OKR" id="OKR">
+                <option value="Select">Select</option>
+              <option value="Productivity">Productivity</option>
+              <option value="Efficiency">Efficiency</option>
+              <option value="Asset Lifetime">Asset Lifetime</option>
+              <option value="Cost">Cost</option>
+            </select></label>
+            <label>KPI:
+            <select name="KPIs" id="KPIs">
+              <option value="">---------</option>
+            </select></label>
+            <br><br>
+        </form>
+    </div>
+</div>
+<div style="height: 800px;  background-color: #ffffff;
+  	        box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);">
+    <div class="kpidivs">
+        <div class='kpidiv'>
+            <div class="box red" style="display: inline-block">
+            </div>
+            <div style="display: inline-block">
+                <a href="{% url 'kpi'  kpi="kpi1" %}">KPI1</a>
+            </div>
+        </div><br>
+                <div class='kpidiv'>
+            <div class="box green" style="display: inline-block">
+            </div>
+            <div style="display: inline-block">
+                <a href="{% url 'kpi'  kpi="kpi2" %}">KPI2</a>
+            </div>
+        </div><br>
+                <div class='kpidiv'>
+            <div class="box blue" style="display: inline-block">
+            </div>
+            <div style="display: inline-block">
+                <a href="{% url 'kpi'  kpi="kpi3" %}">KPI3</a>
+            </div>
+        </div><br>
+                <div class='kpidiv' >
+            <div class="box red" style="display: inline-block">
+            </div>
+            <div style="display: inline-block">
+                <a href="{% url 'kpi'  kpi="kpi4" %}">KPI4</a>
+            </div>
+        </div>
+    </div>
+    <div class="instrument">
+
+            <a href="#" style="text-align: center;align-items: center">
+                <img src="{% static 'images/blank.jpg' %}"  alt="" style="align-items: center">
+                <h6 >label</h6>
+            </a>
+    </div>
+</div>
+
+
+</body>
+</html>
