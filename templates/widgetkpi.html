@@ -51,7 +51,8 @@
      <script>
       window.onload = function() {
         let prices = {"Productivity":[{value:1,desc:"Total Throughput"},{value:2,desc:"Mean Throughput "}],
-             "Efficiency":[{value:1,desc:"Total Fuel Efficiency"},{value:2,desc:"Operational Fuel Efficiency"}],
+             "Efficiency":[{value:1,desc:"Total Fuel Efficiency"},{value:2,desc:"Operational Fuel Efficiency"}
+                 ,{value:3,desc:"Total Distance"},{value:4,desc:"Average Distance"},{value:5,desc:"Average Fuel Efficiency"}],
              "Asset Lifetime":[{value:1,desc:"Total Failures"},{value:2,desc:"Mean Time Between Failures"},{value:3,desc:"Mean Time to Repair"}],
             "Cost":[{value:1,desc:"Cost of Repair"},{value:2,desc:"Mean Cost to Repair"},
                 {value:3,desc:"Fuel expenses"},{value:4,desc:"Production cost"},{value:5,desc:"Miscellaneous"}],
@@ -68,54 +69,38 @@
 </div>
 <div style="height: 125px; width: 100%">
     <div style="display: inline-block;">
-        <form>
+        <form method="POST">
+        {% csrf_token %}
             <label>OKR:
             <select name="OKR" id="OKR">
-                <option value="Select">Select</option>
-              <option value="Productivity">Productivity</option>
-              <option value="Efficiency">Efficiency</option>
-              <option value="Asset Lifetime">Asset Lifetime</option>
-              <option value="Cost">Cost</option>
+
+                <option value="{{ okr }}">{{ okr }}</option>
+
             </select></label>
             <label>KPI:
             <select name="KPIs" id="KPIs">
-              <option value="">---------</option>
+                {% for i in kpi %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+
             </select></label>
             <br><br>
+        <input type="submit">
         </form>
     </div>
 </div>
+{% if skpi %}
 <div style="height: 800px;  background-color: #ffffff;
   	        box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);">
     <div class="kpidivs">
         <div class='kpidiv'>
-            <div class="box red" style="display: inline-block">
-            </div>
+           <!-- <div class="box red" style="display: inline-block">
+            </div>-->
             <div style="display: inline-block">
-                <a href="{% url 'kpi'  kpi="kpi1" %}">KPI1</a>
+                <a href="{{ skpi }}">{{ skpi }}</a>
             </div>
         </div><br>
-                <div class='kpidiv'>
-            <div class="box green" style="display: inline-block">
-            </div>
-            <div style="display: inline-block">
-                <a href="{% url 'kpi'  kpi="kpi2" %}">KPI2</a>
-            </div>
-        </div><br>
-                <div class='kpidiv'>
-            <div class="box blue" style="display: inline-block">
-            </div>
-            <div style="display: inline-block">
-                <a href="{% url 'kpi'  kpi="kpi3" %}">KPI3</a>
-            </div>
-        </div><br>
-                <div class='kpidiv' >
-            <div class="box red" style="display: inline-block">
-            </div>
-            <div style="display: inline-block">
-                <a href="{% url 'kpi'  kpi="kpi4" %}">KPI4</a>
-            </div>
-        </div>
+
     </div>
     <div class="instrument">
 
@@ -125,7 +110,7 @@
             </a>
     </div>
 </div>
-
+{% endif %}
 
 </body>
 </html>

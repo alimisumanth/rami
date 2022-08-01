@@ -6,6 +6,12 @@ import os
 import pandas as pd
 from cockpitProcessing.cockpitProcessing import cockpitDailyPlots, focusbuttons, compute, cockpitWeeklyPlots
 
+instruments = {'WeighScale': 'Productivity', 'Counter': 'Productivity',
+               'Odometer': 'Efficiency', 'Timer': 'Efficiency'}
+kpis = {"Productivity": ["Total Throughput", "Mean Throughput "],
+        "Efficiency": ["Total Fuel Efficiency", "Operational Fuel Efficiency",
+                       "Total Distance", "Average Distance", "Average Fuel Efficiency"]}
+
 
 def ramiParser(request):
     if request.method == 'POST':
@@ -46,8 +52,8 @@ def ramikpi(request, kpi):
                 df.drop('Total', axis=0, inplace=True)
                 cockpitWeeklyPlots(df, total)
             focus_text = focusbuttons(df)
-            standard = {'Weight (Tons)': 'Weigh Scale', 'ItemCount': 'Counter', 'distance': ' Odometer'}
-            attention = {'Elapsed_Sec': 'Timer '}
+            standard = {'Weight (Tons)': 'WeighScale', 'ItemCount': 'Counter', 'distance': 'Odometer'}
+            attention = {'Elapsed_Sec': 'Timer'}
             return render(request, "cockpit.html", context={"kpi": kpi, 'standard': standard.items(),
                                                             'attention': attention.items(),
                                                             'focus_text': focus_text, 'display': True})
@@ -58,10 +64,29 @@ def index(request):
     return render(request, 'index.html')
 
 
-def widgetkpi(request):
-    return render(request, 'widgetkpi.html')
+def widgetkpi(request, instrument):
+    if request.method == 'POST':
+        okr = request.POST['OKR']
+        kpi = request.POST['KPIs']
+        tkpis = kpis[okr]
+        context = {'instrument': instrument, 'okr': okr, 'kpi': tkpis, 'skpi': kpi}
+        return render(request, 'widgetkpi.html', context)
+    okr = instruments[instrument]
+    kpi = kpis[okr]
+    context = {'instrument': instrument, 'okr': okr, 'kpi': kpi}
+    return render(request, 'widgetkpi.html', context)
 
 
-def kpidef(request, kpi):
-    return render(request, 'kpidef.html', context={"kpi": kpi})
+def kpidef(request, instrument, kpi):
+    definition = 'Distance travelled'
+    values = '456'
+    formulae = 'acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371'
+    references = "https://www.meridianoutpost.com/resources/etools/calculators/calculator-latitude-longitude-distance" \
+                 ".php? "
 
+    if kpi.find('Distance') > 0:
+        context = {"kpi": kpi, 'definition': definition, 'values': values,
+                   'formulae': formulae, 'references': references}
+    else:
+        context = {"kpi": kpi}
+    return render(request, 'kpidef.html', context)

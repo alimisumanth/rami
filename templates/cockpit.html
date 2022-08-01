@@ -73,10 +73,12 @@
         {% if standard %}
             {% for i,j in standard %}
                 <div class="instrument">
-                    <a href="{% url 'widget' %}">
+                {% with instrument=j %}
+                    <a href="{% url 'widget' instrument=j %}">
                         <img src="{% static 'output/' %}{{ i }}.png"  alt="">
                         <h6 >{{ j }}</h6>
                     </a>
+                {% endwith %}
                 </div>
             {% endfor %}
        {% endif %}
@@ -88,10 +90,12 @@
        {% if attention %}
             {% for i,j in attention %}
                 <div class="instrument">
-                    <a href="{% url 'widget' %}">
+                {% with instrument=j %}
+                    <a href="{% url 'widget' instrument=j %}">
                         <img src="{% static 'output/' %}{{ i }}.png"  alt="">
                         <h6 >{{ j }}</h6>
                     </a>
+                {% endwith %}
                 </div>
             {% endfor %}
        {% endif %}
