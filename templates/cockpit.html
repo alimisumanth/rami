@@ -28,7 +28,7 @@
             {% for i,j in standard %}
                 <div class="instrument">
                 {% with instrument=j %}
-                    <a href="{% url 'widget' instrument=j %}">
+                    <a href="{{ j }}">
                         <img src="{% static 'output/' %}{{ i }}.png"  alt="">
                         <h6  >{{ j }}</h6>
                     </a>
@@ -47,7 +47,7 @@
             {% for i,j in attention %}
                 <div class="instrument">
                 {% with instrument=j %}
-                    <a href="{% url 'widget' instrument=j %}">
+                    <a href="{{ j }}">
                         <img src="{% static 'output/' %}{{ i }}.png"  alt="">
                         <h6 >{{ j }}</h6>
                     </a>

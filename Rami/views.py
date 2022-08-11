@@ -92,13 +92,13 @@ def ramiParser(request):
                                                      'new_device': ','.join(new_device)})
 
 
-def ramikpi(request, kpi):
+def ramikpi(request, mid):
     display = False
     if request.method == 'POST':
         time = request.POST['time']
 
-        if str(kpi).startswith('QC'):
-            df = compute(kpi)
+        if str(mid).startswith('QC'):
+            df = compute(mid)
             request.session['time'] = time
             if time == 'day':
                 df.drop('Total', axis=0, inplace=True)
@@ -117,10 +117,10 @@ def ramikpi(request, kpi):
             standard = {'Weight (Tons)': 'WeighScale', 'ItemCount': 'Counter', 'Distance': 'Odometer',
                         'FuelConsumption': 'FuelMeter'}
             attention = {'Elapsed_Sec': 'Timer'}
-            return render(request, "cockpit.html", context={"kpi": kpi, 'standard': standard.items(),
+            return render(request, "cockpit.html", context={"kpi": mid, 'standard': standard.items(),
                                                             'attention': attention.items(),
                                                             'focus_text': focus_text, 'display': True})
-    return render(request, "cockpit.html", context={"kpi": kpi, 'display': display})
+    return render(request, "cockpit.html", context={"kpi": mid, 'display': display})
 
 
 @login_required(login_url='login')
@@ -128,7 +128,7 @@ def index(request):
     return render(request, 'index.html')
 
 
-def widgetkpi(request, instrument):
+def widgetkpi(request,mid, instrument):
     if request.method == 'POST':
         okr = request.POST['OKR']
         kpi = request.POST['KPIs']
@@ -204,7 +204,7 @@ def widgetkpi(request, instrument):
     return render(request, 'widgetkpi.html', context)
 
 
-def kpidef(request, instrument, kpi):
+def kpidef(request,mid, instrument, kpi):
     definition = 'Distance travelled'
     values = '456'
     formulae = 'acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371'
