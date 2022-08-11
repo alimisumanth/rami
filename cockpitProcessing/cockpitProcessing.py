@@ -40,7 +40,6 @@ def compute(machine_id):
 def cockpitDailyPlots(df):
     df.reset_index(inplace=True)
     df['StartDate'] = pd.to_datetime(df['StartDate']).dt.date
-    print(df.head(7))
     for i in ['Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'Distance', 'FuelConsumption', 'RepairCost']:
         plt.figure(figsize=(16, 8))
         sns.barplot(x=df['StartDate'], y=df[i])
@@ -55,13 +54,11 @@ def cockpitWeeklyPlots(df, total):
         if i != 'Elapsed_Sec':
             val = (df[i].max()/total[i])*100
             data = [val, 100 - val]
-            print(val, df[i].max(), total[i])
             label = ['max', '']
             explode = [0.1, 0]
         else:
             val = (total[i]/df[i].max())*100
             data = [abs(val), abs(100 - val)]
-            print(val, df[i].max(), total[i])
             label = ['', 'max']
             explode = [0, 0.1]
 
@@ -77,10 +74,8 @@ def focusbuttons(df):
     for i in fields:
         txt = []
         for j in range(df[i].shape[0] - 1):
-
             val = (df[i][j+1]-df[i][j])/df[i][j]
             if val > 0.40:
-                print(f'From {df["StartDate"][j]} to {df["StartDate"][j + 1]} it increased {val} %')
                 txt.append(
                     f'From {df["StartDate"][j]} to {df["StartDate"][j + 1]} it increased {round(val * 100, 2)} %')
             if val < -0.40:

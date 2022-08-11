@@ -35,14 +35,10 @@ def wigetprocessing(kpi):
     return 'Average '+str(kpi)
 
 def getColor(kpi):
-    print(kpi)
     df = pd.read_csv('outputdf.csv')
     total = df[kpi][8]
-
     maxi= max(df[kpi][:8])*8
-
     percent=round((total/maxi)*100)
-    print(total,maxi,percent)
     if percent>=61:
         color='green'
     elif percent==60:
