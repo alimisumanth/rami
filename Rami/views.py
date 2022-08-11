@@ -108,11 +108,12 @@ def ramikpi(request, kpi):
                 df.drop('Total', axis=0, inplace=True)
                 cockpitWeeklyPlots(df, total)
 
-            focus_text = focusbuttons(df)
             if request.session['user'] == 'Alun':
+                focus_text = focusbuttons(df[['StartDate','RepairCost']])
                 standard = {'RepairCost': 'AssetMetric'}
-                context = {'display': True, 'standard': standard.items()}
+                context = {'display': True, 'standard': standard.items(),'focus_text': focus_text,}
                 return render(request, "cockpit.html", context)
+            focus_text = focusbuttons(df[['StartDate','Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'Distance', 'FuelConsumption']])
             standard = {'Weight (Tons)': 'WeighScale', 'ItemCount': 'Counter', 'Distance': 'Odometer',
                         'FuelConsumption': 'FuelMeter'}
             attention = {'Elapsed_Sec': 'Timer'}

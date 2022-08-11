@@ -73,7 +73,7 @@ def cockpitWeeklyPlots(df, total):
 
 def focusbuttons(df):
     hover_text = {}
-    fields = ['Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'Distance', 'FuelConsumption', 'RepairCost']
+    fields = df.columns[1:]
     for i in fields:
         txt = []
         for j in range(df[i].shape[0] - 1):
