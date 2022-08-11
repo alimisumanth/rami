@@ -1,10 +1,81 @@
+{% extends 'navbar.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
+{% block content %}
+
+<div>
+    <h3 class="heading">Digital Cockpit {{ kpi }}</h3>
+    <br>
+    <form method="POST" action="">
+        {% csrf_token %}
+     <label for="time">Time: <select name="time" id="time">
+              <option value="">Select</option>
+              <option value="day">day</option>
+              <option value="week">week</option>
+              <option value="month">month</option>
+              <option value="year">year</option>
+            </select>
+     </label>
+     <input type="submit" value="Submit"/>
+    </form>
+    <br>
+</div>
+{% if display == True %}
+<div class="cockpit">
+    <div class='instruments'>
+        <br>
+        <h5> Standard Instruments</h5>
+        {% if standard %}
+            {% for i,j in standard %}
+                <div class="instrument">
+                {% with instrument=j %}
+                    <a href="{% url 'widget' instrument=j %}">
+                        <img src="{% static 'output/' %}{{ i }}.png"  alt="">
+                        <h6  >{{ j }}</h6>
+                    </a>
+                {% endwith %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <h5 style="text-align: center">No data</h5>
+       {% endif %}
+    </div>
+    <br>
+    <div class='instruments'>
+        <br>
+        <h5> Attention Instruments</h5>
+       {% if attention %}
+            {% for i,j in attention %}
+                <div class="instrument">
+                {% with instrument=j %}
+                    <a href="{% url 'widget' instrument=j %}">
+                        <img src="{% static 'output/' %}{{ i }}.png"  alt="">
+                        <h6 >{{ j }}</h6>
+                    </a>
+                {% endwith %}
+                </div>
+            {% endfor %}
+       {% else %}
+            <h5 style="text-align: center">No data</h5>
+       {% endif %}
+</div>
+    <br>
+    <div class="focusbuttons">
+        <div class="focusbutton">
+            <h3 style="text-align: center"> Focus buttons</h3>
+            {% if focus_text %}
+                {% for i,j in focus_text %}
+                    <button title="{{ j }}">{{ i }}</button>
+                {% endfor %}
+            {% else %}
+                <h5 style="text-align: center">No data</h5>
+            {% endif %}
+        </div>
+
+    </div>
+<br>
+</div>
+{% endif %}
+<style>
         .heading{
             text-align: center;
         }
@@ -46,74 +117,6 @@
         }
 
      </style>
-</head>
-<body>
-<div>
-    <h3 class="heading">Digital Cockpit {{ kpi }}</h3>
-    <br>
-    <form method="POST" action="">
-        {% csrf_token %}
-     <label for="time">Time: <select name="time" id="time">
-              <option value="">Select</option>
-              <option value="day">day</option>
-              <option value="week">week</option>
-              <option value="month">month</option>
-              <option value="year">year</option>
-            </select>
-     </label>
-     <input type="submit" value="Submit"/>
-    </form>
-    <br>
-</div>
-{% if display == True %}
-<div class="cockpit">
-    <div class='instruments'>
-        <br>
-        <h5> Standard Instruments</h5>
-        {% if standard %}
-            {% for i,j in standard %}
-                <div class="instrument">
-                {% with instrument=j %}
-                    <a href="{% url 'widget' instrument=j %}">
-                        <img src="{% static 'output/' %}{{ i }}.png"  alt="">
-                        <h6 >{{ j }}</h6>
-                    </a>
-                {% endwith %}
-                </div>
-            {% endfor %}
-       {% endif %}
-    </div>
-    <br>
-    <div class='instruments'>
-        <br>
-        <h5> Attention Instruments</h5>
-       {% if attention %}
-            {% for i,j in attention %}
-                <div class="instrument">
-                {% with instrument=j %}
-                    <a href="{% url 'widget' instrument=j %}">
-                        <img src="{% static 'output/' %}{{ i }}.png"  alt="">
-                        <h6 >{{ j }}</h6>
-                    </a>
-                {% endwith %}
-                </div>
-            {% endfor %}
-       {% endif %}
-</div>
-    <br>
-    <div class="focusbuttons">
-        <div class="focusbutton">
-            <h3 style="text-align: center"> Focus buttons</h3>
-            {% if focus_text %}
-                {% for i,j in focus_text %}
-                    <button title="{{ j }}">{{ i }}</button>
-                {% endfor %}
-            {% endif %}
-        </div>
 
-    </div>
-<br>
-</div>
-{% endif %}
-</body>
-</html>
+
+{% endblock %}

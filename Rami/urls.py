@@ -17,12 +17,17 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 
+app_name = 'Rami'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index,name="index"),
+    path('', views.index, name="index"),
     path('rami/', views.ramiParser, name="ramiParser"),
     path('rami/<kpi>', views.ramikpi, name="ramikpi"),
     path('widget/<instrument>/', views.widgetkpi, name='widget'),
     path('widget/<instrument>/<kpi>/', views.kpidef, name='kpi'),
+    path('login', views.signin, name='login'),
+    path('logout', views.signOut, name='logout'),
+    path('registration', views.signUp, name='register'),
 
 ]

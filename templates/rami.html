@@ -1,18 +1,7 @@
+{% extends 'navbar.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>rami</title>
-        <style>
-        img{
-            width: 149px;
-            height: 149px;
-        }
-    </style>
-</head>
+{% block content %}
 
-<body>
 <h1 style="color: #0c0c0c;font-weight: bold;text-align: center">{{ vertical }}</h1>
 {% if summary %}
     <h3>Processed List Of Assets</h3>
@@ -23,13 +12,17 @@
 <div style="background-image: url('{% static "images/"%}{{ vertical }}.png') ; padding-top: 20px;padding-left:10px;padding-right: 10px ">
 {% if devices %}
     {% for i,j in devices %}
-        <a href="{{ j }}"> <img src=" {% static 'images/' %}{{ i }}.png " style="padding: 13px" alt= "{{ i }}" title="{{ j }}"></a>
-
+        <a href="{{ j }}"> <img src=" {% static 'images/' %}{{ i }}.png " style=";" alt= "{{ i }}" title="{{ j }}"></a>
     {% endfor %}
 {% endif %}
 {% if new_device %}
     <h3 >Device {{ new_device }} not found</h3>
 {% endif %}
 </div>
-</body>
-</html>
+     <style>
+        img{
+            width: 149px;
+            height: 149px;
+        }
+    </style>
+{% endblock %}

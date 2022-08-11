@@ -1,9 +1,59 @@
+{% extends 'navbar.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+{% block content %}
+<div>
+    <h4 style="text-align: center">Widget</h4>
+</div>
+<div style="height: 125px; width: 100%">
+    <div style="display: inline-block;">
+        <form method="POST">
+        {% csrf_token %}
+            <label>OKR:
+            <select name="OKR" id="OKR">
+
+                <option value="{{ okr }}">{{ okr }}</option>
+
+            </select></label>
+            <label>KPI:
+            <select name="KPIs" id="KPIs">
+                {% for i in kpi %}
+                <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+
+            </select></label>
+            <br><br>
+        <input type="submit">
+        </form>
+    </div>
+</div>
+{% if skpi %}
+<div style="height: 800px;  background-color: #ffffff;
+  	        box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);">
+    <div class="kpidivs">
+        <div class='kpidiv'>
+           <!-- <div class="box red" style="display: inline-block">
+            </div>-->
+            <div style="display: inline-block">
+                <a href="{{ skpi }}" style="color: {{ color }}">{{ skpi }}</a>
+            </div>
+        </div><br>
+
+    </div>
+    <div class="instrument">
+        {% if graph %}
+            <a href="#" style="text-align: center;align-items: center">
+                <img src="{% static 'output/' %}{{ graph }}.png"  alt="" style="align-items: center">
+                <h6 >{{ skpi }}</h6>
+            </a>
+            {% endif %}
+    {% if data %}
+
+        <h6 style="font-weight: bold; font-size: larger ">{{ data }}</h6>
+
+        {% endif %}
+    </div>
+</div>
+{% endif %}
     <style>
 .kpidiv{
             display: inline-block;
@@ -62,55 +112,4 @@
           document.getElementsByName('KPIs')[0].innerHTML = prices[this.value].reduce((acc, elem) => `${acc}<option value="${elem.value}">${elem.desc}</option>`, "");
         });
       }</script>
-</head>
-<body>
-<div>
-    <h4 style="text-align: center">Widget</h4>
-</div>
-<div style="height: 125px; width: 100%">
-    <div style="display: inline-block;">
-        <form method="POST">
-        {% csrf_token %}
-            <label>OKR:
-            <select name="OKR" id="OKR">
-
-                <option value="{{ okr }}">{{ okr }}</option>
-
-            </select></label>
-            <label>KPI:
-            <select name="KPIs" id="KPIs">
-                {% for i in kpi %}
-                <option value="{{ i }}">{{ i }}</option>
-                {% endfor %}
-
-            </select></label>
-            <br><br>
-        <input type="submit">
-        </form>
-    </div>
-</div>
-{% if skpi %}
-<div style="height: 800px;  background-color: #ffffff;
-  	        box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);">
-    <div class="kpidivs">
-        <div class='kpidiv'>
-           <!-- <div class="box red" style="display: inline-block">
-            </div>-->
-            <div style="display: inline-block">
-                <a href="{{ skpi }}">{{ skpi }}</a>
-            </div>
-        </div><br>
-
-    </div>
-    <div class="instrument">
-
-            <a href="#" style="text-align: center;align-items: center">
-                <img src="{% static 'images/blank.jpg' %}"  alt="" style="align-items: center">
-                <h6 >label</h6>
-            </a>
-    </div>
-</div>
-{% endif %}
-
-</body>
-</html>
+{% endblock %}

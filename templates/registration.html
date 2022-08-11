@@ -1,0 +1,73 @@
+{% load static %}
+
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Register</title>
+		<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+	<style>
+        body {
+  	background-color: cyan;
+  	margin: 0;
+}
+    </style>
+    </head>
+	<body class="lr_body">
+        <h1 style="text-align: center;font-size: 35px;color: white ">Rami</h1>
+		<div class="register">
+			<h1>Register</h1>
+			<div class="links">
+				<a href="{% url 'login' %}">Login</a>
+				<a href="{% url 'register' %}" class="active">Register</a>
+			</div>
+			<form  role="form" data-toggle="validator" method="post" autocomplete="off">
+				{% csrf_token %}
+                <div class="form-group">
+                    <div class="flex-container">
+                       <label for="username">
+					        <i class="fas fa-user"></i>
+				       </label>
+                            <input type="text" name="username" placeholder="Enter your username" required/>
+                    </div>
+                    <!-- Error -->
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <div class="flex-container">
+				        <label for="email">
+					        <i class="fas fa-envelope"></i>
+				        </label>
+				       <input type="email" name="email" placeholder="Enter your mail" required/>
+                    </div>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <div class="flex-container">
+				        <label for="password">
+					        <i class="fas fa-lock"></i>
+				        </label>
+				    <input type="password" name="password1" placeholder="Enter your password" required/>
+                    </div>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <div class="flex-container">
+				        <label for="password">
+					        <i class="fas fa-lock"></i>
+				        </label>
+				    <input type="password" name="password2" placeholder="Re-enter your password" required/>
+                    </div>
+                    <div class="help-block with-errors"></div>
+                </div>
+				<input type="submit" value="Register">
+			</form>
+             {% for message in messages %}
+				<p id="messages">{{message}}</p>
+		{% endfor %}
+		</div>
+	</body>
+</html>

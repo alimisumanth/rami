@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'navbar.html' %}
+
+{% block content %}
 {{ kpi }}
 <hr>
 Definition:
@@ -21,6 +17,7 @@ Formulae:
 <hr>
 References:
 <br>
+{% if references %}
 <a href="{{ references }}">www.meridianoutpost.com/resources/etools/calculators/calculator-latitude-longitude-distance</a>
-</body>
-</html>
+{% endif %}
+{% endblock %}

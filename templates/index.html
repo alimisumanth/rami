@@ -1,10 +1,7 @@
+{% extends 'navbar.html' %}
 {% load static %}
-<html>
-<head>
-	<title>Rami</title>
-</head>
-<body>
 
+{% block content %}
 <form name="form1" id="form1" enctype="multipart/form-data" method="post" action="{% url 'ramiParser' %}">
     {% csrf_token %}
      <input type="file"
@@ -15,7 +12,4 @@
             accept="text/xml" >
     <input  type="submit" value="Select" style="margin-left: 140px">
 </form>
-
-
-</body>
-</html>
+{% endblock %}

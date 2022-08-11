@@ -26,19 +26,22 @@ import seaborn as sns
 
 
 def compute(machine_id):
-    df = pd.read_excel('QC-KPIs.xlsx', engine='openpyxl', sheet_name='Sheet1')
+    df = pd.read_excel('QC-KPIs.xlsx', engine='openpyxl', sheet_name='Synth')
 
     df_new = df.groupby(['machine_id', 'StartDate'])[['Elapsed_Sec',
-                                                      'distance',
-                                                      'ItemCount', 'Weight (Tons)']].sum().loc[machine_id, :]
+                                                      'Distance',
+                                                      'ItemCount', 'Weight (Tons)',
+                                                      'FuelConsumption', 'RepairCost']].sum().loc[machine_id, :]
     df_new.loc['Total'] = df_new.sum(axis=0)
+    df_new.to_csv('outputdf.csv')
     return df_new
 
 
 def cockpitDailyPlots(df):
     df.reset_index(inplace=True)
     df['StartDate'] = pd.to_datetime(df['StartDate']).dt.date
-    for i in ['Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'distance']:
+    print(df.head(7))
+    for i in ['Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'Distance', 'FuelConsumption', 'RepairCost']:
         plt.figure(figsize=(16, 8))
         sns.barplot(x=df['StartDate'], y=df[i])
         plt.xticks(rotation=30)
@@ -48,7 +51,7 @@ def cockpitDailyPlots(df):
 def cockpitWeeklyPlots(df, total):
     df.reset_index(inplace=True)
     df['StartDate'] = pd.to_datetime(df['StartDate']).dt.date
-    for i in ['Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'distance']:
+    for i in ['Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'Distance', 'FuelConsumption', 'RepairCost']:
         if i != 'Elapsed_Sec':
             val = (df[i].max()/total[i])*100
             data = [val, 100 - val]
@@ -70,7 +73,7 @@ def cockpitWeeklyPlots(df, total):
 
 def focusbuttons(df):
     hover_text = {}
-    fields = ['Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'distance']
+    fields = ['Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'Distance', 'FuelConsumption', 'RepairCost']
     for i in fields:
         txt = []
         for j in range(df[i].shape[0] - 1):
