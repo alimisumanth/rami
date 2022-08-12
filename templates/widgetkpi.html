@@ -27,89 +27,88 @@
     </div>
 </div>
 {% if skpi %}
-<div style="height: 800px;  background-color: #ffffff;
-  	        box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);">
-    <div class="kpidivs">
-        <div class='kpidiv'>
-           <!-- <div class="box red" style="display: inline-block">
-            </div>-->
-            <div style="display: inline-block">
-                <a href="{{ skpi }}" style="color: {{ color }}">{{ skpi }}</a>
-            </div>
-        </div><br>
-
-    </div>
-    <div class="instrument">
+<div style="height: 650px;  background-color: #ffffff;
+  	        box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3)">
+     <div class="kpidiv">
+         <br><br><br><br><br><br><br><br><br>
+                <a href="{{ skpi }}" style="color: {{ color }}; text-align: center">{{ skpi }}</a>
+        </div>
+     <div class="instrument">
+    {% if time == 'day' %}
+         <a href="#" style="text-align: center;align-items: center">
+                    <div id="graph"></div>
+         </a>
         {% if graph %}
-            <a href="#" style="text-align: center;align-items: center">
-                <img src="{% static 'output/' %}{{ graph }}.png"  alt="" style="align-items: center">
-                <h6 >{{ skpi }}</h6>
-            </a>
-            {% endif %}
-    {% if data %}
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable({{ graph|safe }});
+      var view = new google.visualization.DataView(data);
+      var options = {
+        title: "{{ skpi }}",
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:60 },
+        vAxis: {title: "Weights"},
+        height: 500,
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("graph"));
+      chart.draw(view, options);
+  }
+  </script>
+        {% endif %}
+    {% else %}
+        {% if graph %}
+                     <a href="#" style="text-align: center;align-items: center">
+                    <div id="graph"></div>
+         </a>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
 
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable({{ graph|safe }});
+
+        var options = {
+          title: 'FuelMeter',
+            width:300,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('graph'));
+
+        chart.draw(data, options);
+      }
+  </script>
+       {% endif %}
+    {% endif %}
+
+          {% if data %}
         <h6 style="font-weight: bold; font-size: larger ">{{ data }}</h6>
-
         {% endif %}
     </div>
+
 </div>
 {% endif %}
-    <style>
-.kpidiv{
+<style>
+    .kpidiv{
             display: inline-block;
+            width: 28%;
+            float:left;
+        text-align:center ;
+
         }
-.box {
-  float: left;
-  height: 20px;
-  width: 20px;
-  margin-bottom: 15px;
-  border: 1px solid black;
-  clear: both;
-}
-
-.red {
-  background-color: red;
-}
-
-.green {
-  background-color: green;
-}
-
-.blue {
-  background-color: blue;
-}
-        .instrument{
-
+    .instrument{
             display: inline-block;
             margin: 15px;
             width: 65%;
             align-items: center;
             text-align: center;
-            height: 750px;
+            height: 650px;
+        }
+</style>
 
-        }
-        .kpidivs{
-    width: 30%;
-    display: inline-block;
-}
-         img{
-            width: 300px;
-            height:200px;
-             margin: 10px;
-        }
-        </style>
-     <script>
-      window.onload = function() {
-        let prices = {"Productivity":[{value:1,desc:"Total Throughput"},{value:2,desc:"Mean Throughput "}],
-             "Efficiency":[{value:1,desc:"Total Fuel Efficiency"},{value:2,desc:"Operational Fuel Efficiency"}
-                 ,{value:3,desc:"Total Distance"},{value:4,desc:"Average Distance"},{value:5,desc:"Average Fuel Efficiency"}],
-             "Asset Lifetime":[{value:1,desc:"Total Failures"},{value:2,desc:"Mean Time Between Failures"},{value:3,desc:"Mean Time to Repair"}],
-            "Cost":[{value:1,desc:"Cost of Repair"},{value:2,desc:"Mean Cost to Repair"},
-                {value:3,desc:"Fuel expenses"},{value:4,desc:"Production cost"},{value:5,desc:"Miscellaneous"}],
-              "Select":[{value:1,desc:"-------"}],
-        }
-          document.getElementsByName('OKR')[0].addEventListener('change', function(e) {
-          document.getElementsByName('KPIs')[0].innerHTML = prices[this.value].reduce((acc, elem) => `${acc}<option value="${elem.value}">${elem.desc}</option>`, "");
-        });
-      }</script>
 {% endblock %}

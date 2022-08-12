@@ -8,8 +8,9 @@ from .forms import Users
 import random
 import os
 import pandas as pd
-from widgetKpiProcessong.widgetKpiProcessing import wigetprocessing, getColor
+from widgetKpiProcessong.widgetKpiProcessing import getColor, wigetDailyPlots
 from cockpitProcessing.cockpitProcessing import cockpitDailyPlots, focusbuttons, compute, cockpitWeeklyPlots
+import json
 
 instruments = {'WeighScale': 'Productivity', 'Counter': 'Productivity',
                'Odometer': 'Efficiency', 'Timer': 'Efficiency', 'FuelMeter': 'Efficiency',
@@ -101,25 +102,56 @@ def ramikpi(request, mid):
             df = compute(mid)
             request.session['time'] = time
             if time == 'day':
-                df.drop('Total', axis=0, inplace=True)
-                cockpitDailyPlots(df)
+                if request.session['user'] == 'Alun':
+                    columns = ['RepairCost']
+                    res = cockpitDailyPlots(columns)
+                    focus_text = focusbuttons(columns)
+                    return render(request, 'cockpit.html',
+                                  {"kpi": mid,
+                                   'Accounts': res['RepairCost'],
+                                   'display': True,
+                                   'focus_text': focus_text,
+                                   })
+                else:
+                    columns = ['Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'Distance', 'FuelConsumption']
+                    res = cockpitDailyPlots(columns)
+                    focus_text = focusbuttons(columns)
+                    return render(request, 'cockpit.html',
+                                  {"kpi": mid,
+                                   'WeighScale': res['Weight (Tons)'],
+                                   'Counter': res['ItemCount'],
+                                   'Odometer': res['Distance'],
+                                   'FuelMeter': res['FuelConsumption'],
+                                   'Timer': res['Elapsed_Sec'],
+                                   'display': True,
+                                   'focus_text': focus_text,
+                                   })
             else:
-                total = df.loc['Total'].to_dict()
-                df.drop('Total', axis=0, inplace=True)
-                cockpitWeeklyPlots(df, total)
-
-            if request.session['user'] == 'Alun':
-                focus_text = focusbuttons(df[['StartDate','RepairCost']])
-                standard = {'RepairCost': 'AssetMetric'}
-                context = {'display': True, 'standard': standard.items(),'focus_text': focus_text,}
-                return render(request, "cockpit.html", context)
-            focus_text = focusbuttons(df[['StartDate','Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'Distance', 'FuelConsumption']])
-            standard = {'Weight (Tons)': 'WeighScale', 'ItemCount': 'Counter', 'Distance': 'Odometer',
-                        'FuelConsumption': 'FuelMeter'}
-            attention = {'Elapsed_Sec': 'Timer'}
-            return render(request, "cockpit.html", context={"kpi": mid, 'standard': standard.items(),
-                                                            'attention': attention.items(),
-                                                            'focus_text': focus_text, 'display': True})
+                if request.session['user'] == 'Alun':
+                    columns = ['RepairCost']
+                    res = cockpitWeeklyPlots(columns)
+                    focus_text = focusbuttons(columns)
+                    return render(request, 'cockpit.html',
+                                  {"kpi": mid,
+                                   'Accounts_w': res['RepairCost'],
+                                   'display': True,
+                                   'focus_text': focus_text,
+                                   })
+                else:
+                    columns = ['Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'Distance', 'FuelConsumption']
+                    res = cockpitWeeklyPlots(columns)
+                    focus_text = focusbuttons(columns)
+                    return render(request, 'cockpit.html',
+                                  {
+                                      "kpi": mid,
+                                      'WeighScale_w': res['Weight (Tons)'],
+                                      'Counter_w': res['ItemCount'],
+                                      'Odometer_w': res['Distance'],
+                                      'FuelMeter_w': res['FuelConsumption'],
+                                      'Timer_w': res['Elapsed_Sec'],
+                                      'display': True,
+                                      'focus_text': focus_text,
+                                  })
     return render(request, "cockpit.html", context={"kpi": mid, 'display': display})
 
 
@@ -128,7 +160,7 @@ def index(request):
     return render(request, 'index.html')
 
 
-def widgetkpi(request,mid, instrument):
+def widgetkpi(request, mid, instrument):
     if request.method == 'POST':
         okr = request.POST['OKR']
         kpi = request.POST['KPIs']
@@ -142,53 +174,48 @@ def widgetkpi(request,mid, instrument):
         else:
             tkpis = kpis[okr]
         skpi = kpi
-        kpi_ = None
         if kpi.find('Total') >= 0:
             kpi = kpi.replace('Total ', '')
             if instrument == 'WeighScale' and kpi == 'Throughput':
-                graph = "Weight (Tons)"
-                kpi_ = "Weight (Tons)"
+                col = "Weight (Tons)"
             elif instrument == 'Counter' and kpi == 'Throughput':
-                graph = 'ItemCount'
-                kpi_ = 'ItemCount'
-            elif instrument == 'Odometer':
-                graph = 'Distance'
-                kpi_ = 'Distance'
-            elif instrument == 'Timer':
-                graph = 'Elapsed_Sec'
-                kpi_ = 'Elapsed_Sec'
-            elif instrument == 'FuelMeter':
-                graph = 'FuelConsumption'
-                kpi_ = 'FuelConsumption'
-            elif instrument == 'AssetMetric' and kpi == 'RepairCost':
-                graph = 'RepairCost'
-                kpi_ = 'RepairCost'
+                col = 'ItemCount'
+            elif kpi == 'Fuel Efficiency':
+                col = 'FuelConsumption'
+            elif kpi == 'Time':
+                col = 'Elapsed_Sec'
+            else:
+                col = kpi
+
+            if time == 'day':
+                graph = cockpitDailyPlots([col])[col]
+            else:
+                graph = cockpitWeeklyPlots([col])[col]
         if kpi.find('Average') >= 0:
             kpi = kpi.replace('Average ', '')
             if kpi == 'Throughput' and instrument == 'WeighScale':
-                kpi_ = 'Weight (Tons)'
+                col = 'Weight (Tons)'
             elif kpi == 'Throughput' and instrument == 'Counter':
-                kpi_ = 'ItemCount'
-            elif kpi == 'Distance':
-                kpi_ = 'Distance'
+                col = 'ItemCount'
             elif kpi == 'Fuel Efficiency':
-                kpi_ = 'FuelConsumption'
-            elif kpi == 'RepairCost':
-                kpi_ = 'RepairCost'
+                col = 'FuelConsumption'
             elif kpi == 'Time':
-                kpi_ = 'Elapsed_Sec'
+                col = 'Elapsed_Sec'
+            else:
+                col=kpi
             if time == 'day':
-                graph = wigetprocessing(kpi_)
+                graph = wigetDailyPlots(col)
             else:
                 df = pd.read_csv('outputdf.csv')
-                data = df[kpi_][8] / 8
-                color = getColor(kpi_)
+                data = df[col][8] / 8
+                color = getColor(col)
 
                 context = {'instrument': instrument, 'okr': okr, 'kpi': tkpis, 'skpi': skpi, 'data': data,
                            'color': color}
                 return render(request, 'widgetkpi.html', context)
-        color = getColor(kpi_)
-        context = {'instrument': instrument, 'okr': okr, 'kpi': tkpis, 'skpi': skpi, 'graph': graph, 'color': color}
+        color = getColor(col)
+        context = {'instrument': instrument, 'okr': okr, 'kpi': tkpis, 'skpi': skpi, 'graph': graph,
+                   'time': time, 'color': color}
         return render(request, 'widgetkpi.html', context)
     okr = instruments[instrument]
     if instrument == 'Odometer':
@@ -204,7 +231,7 @@ def widgetkpi(request,mid, instrument):
     return render(request, 'widgetkpi.html', context)
 
 
-def kpidef(request,mid, instrument, kpi):
+def kpidef(request, mid, instrument, kpi):
     definition = 'Distance travelled'
     values = '456'
     formulae = 'acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371'
@@ -217,3 +244,11 @@ def kpidef(request,mid, instrument, kpi):
     else:
         context = {"kpi": kpi}
     return render(request, 'kpidef.html', context)
+
+
+def graphs(request):
+    columns = ['Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'Distance', 'FuelConsumption']
+    res = cockpitWeeklyPlots(columns)
+    print(res['Elapsed_Sec'])
+    return render(request, 'graphs.html',
+                  {'bar1_m1': res['Elapsed_Sec']})

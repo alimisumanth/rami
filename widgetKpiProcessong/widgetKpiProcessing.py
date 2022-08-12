@@ -24,6 +24,18 @@ import seaborn as sns
 import os
 import math
 
+
+def wigetDailyPlots(column):
+    df = pd.read_csv('outputdf.csv')
+    average = df[column] / 8
+    data = average[:8]
+    df = df.iloc[:8, :]
+    df['StartDate'] = df['StartDate'].apply(lambda x: x.split(' ')[0])
+    result=[[df['StartDate'][j], data[j]] for j in range(df.shape[0])][::-1]
+    result.insert(0, ['Date', 'Value'])
+    return result
+
+
 def wigetprocessing(kpi):
     df=pd.read_csv('outputdf.csv')
     average=df[kpi]/8

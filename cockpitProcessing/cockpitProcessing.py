@@ -20,9 +20,6 @@ Revision:
 
 from multiprocessing import Process
 import pandas as pd
-import matplotlib.pyplot as plt
-import os
-import seaborn as sns
 
 
 def compute(machine_id):
@@ -37,41 +34,37 @@ def compute(machine_id):
     return df_new
 
 
-def cockpitDailyPlots(df):
-    df.reset_index(inplace=True)
-    df['StartDate'] = pd.to_datetime(df['StartDate']).dt.date
-    for i in ['Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'Distance', 'FuelConsumption', 'RepairCost']:
-        plt.figure(figsize=(16, 8))
-        sns.barplot(x=df['StartDate'], y=df[i])
-        plt.xticks(rotation=30)
-        plt.savefig(os.path.join('static', 'output',  i + '.png'))
+def cockpitDailyPlots(columns):
+    df = pd.read_csv('outputdf.csv')
+    result={}
+    df = df.iloc[:8, :]
+    df['StartDate'] = df['StartDate'].apply(lambda x: x.split(' ')[0])
+    for i in columns:
+        data=[[df['StartDate'][j], df[i][j]] for j in range(df.shape[0])][::-1]
+        data.insert(0, ['Date', 'Value'])
+        result[i]=data
+    return result
 
 
-def cockpitWeeklyPlots(df, total):
-    df.reset_index(inplace=True)
-    df['StartDate'] = pd.to_datetime(df['StartDate']).dt.date
-    for i in ['Weight (Tons)', 'Elapsed_Sec', 'ItemCount', 'Distance', 'FuelConsumption', 'RepairCost']:
-        if i != 'Elapsed_Sec':
-            val = (df[i].max()/total[i])*100
-            data = [val, 100 - val]
-            label = ['max', '']
-            explode = [0.1, 0]
-        else:
-            val = (total[i]/df[i].max())*100
-            data = [abs(val), abs(100 - val)]
-            label = ['', 'max']
-            explode = [0, 0.1]
-
-        plt.figure(figsize=(16, 8))
-        palette_color = sns.color_palette('bright')
-        plt.pie(data, labels=label, colors=palette_color, explode=explode, autopct='%.0f%%')
-        plt.savefig(os.path.join('static', 'output',  i + '.png'))
+def cockpitWeeklyPlots(columns):
+    df = pd.read_csv('outputdf.csv')
+    result = {}
+    total = df.iloc[8, :].to_dict()
+    df = df.iloc[:8, :]
+    df['StartDate'] = df['StartDate'].apply(lambda x: x.split(' ')[0])
+    for i in columns:
+        data = [['Max', abs(df[i].max())], ['Total', abs(total[i])]]
+        data.insert(0, ['Measure', 'value'])
+        result[i] = data
+    return result
 
 
-def focusbuttons(df):
+def focusbuttons(columns):
+    df = pd.read_csv('outputdf.csv')
+    df = df.iloc[:8, :]
+    df['StartDate'] = df['StartDate'].apply(lambda x: x.split(' ')[0])
     hover_text = {}
-    fields = df.columns[1:]
-    for i in fields:
+    for i in columns:
         txt = []
         for j in range(df[i].shape[0] - 1):
             val = (df[i][j+1]-df[i][j])/df[i][j]

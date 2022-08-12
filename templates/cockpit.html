@@ -24,40 +24,341 @@
     <div class='instruments'>
         <br>
         <h5> Standard Instruments</h5>
-        {% if standard %}
-            {% for i,j in standard %}
+        {% if WeighScale %}
                 <div class="instrument">
-                {% with instrument=j %}
-                    <a href="{{ j }}">
-                        <img src="{% static 'output/' %}{{ i }}.png"  alt="">
-                        <h6  >{{ j }}</h6>
+                    <a href="WeighScale">
+
+                        <div id="WeighScale"></div>
                     </a>
-                {% endwith %}
                 </div>
-            {% endfor %}
-        {% else %}
-            <h5 style="text-align: center">No data</h5>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable({{ WeighScale|safe }});
+      var view = new google.visualization.DataView(data);
+      var options = {
+        title: "WeighScale",
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:60 },
+        vAxis: {title: "Weights"},
+        height: 500,
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("WeighScale"));
+      chart.draw(view, options);
+  }
+  </script>
+
+       {% endif %}
+        {% if Counter %}
+                <div class="instrument">
+                    <a href="Counter">
+
+                        <div id="Counter"></div>
+                    </a>
+                </div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable({{ Counter|safe }});
+      var view = new google.visualization.DataView(data);
+      var options = {
+        title: "Counter",
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:60 },
+        vAxis: {title: "ItemCount"},
+        height: 500,
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("Counter"));
+      chart.draw(view, options);
+  }
+  </script>
+
+       {% endif %}
+        {% if Odometer %}
+                <div class="instrument">
+                    <a href="Odometer">
+
+                        <div id="Odometer"></div>
+                    </a>
+                </div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable({{ Odometer|safe }});
+      var view = new google.visualization.DataView(data);
+      var options = {
+        title: "Odometer",
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:60 },
+        vAxis: {title: "Distance"},
+        height: 500,
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("Odometer"));
+      chart.draw(view, options);
+  }
+  </script>
+
+       {% endif %}
+        {% if FuelMeter %}
+                <div class="instrument">
+                    <a href="FuelMeter">
+
+                        <div id="FuelMeter"></div>
+                    </a>
+                </div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable({{ FuelMeter|safe }});
+      var view = new google.visualization.DataView(data);
+      var options = {
+        title: "FuelMeter",
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:60 },
+        vAxis: {title: "Fuel"},
+        height: 500,
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("FuelMeter"));
+      chart.draw(view, options);
+  }
+  </script>
+
+       {% endif %}
+        {% if Accounts %}
+                <div class="instrument">
+                    <a href="Accounts">
+
+                        <div id="Accounts"></div>
+                    </a>
+                </div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable({{ Accounts|safe }});
+      var view = new google.visualization.DataView(data);
+      var options = {
+        title: "Accounts",
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:60 },
+        vAxis: {title: "Cost"},
+        height: 500,
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("Accounts"));
+      chart.draw(view, options);
+  }
+  </script>
+
+       {% endif %}
+        {% if WeighScale_w %}
+                <div class="instrument">
+                    <a href="WeighScale">
+
+                        <div id="WeighScale_w"></div>
+                    </a>
+                </div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable({{ WeighScale_w|safe }});
+
+        var options = {
+          title: 'WeighScale'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('WeighScale_w'));
+
+        chart.draw(data, options);
+      }
+  </script>
+
+       {% endif %}
+         {% if Counter_w %}
+                <div class="instrument">
+                    <a href="Counter">
+
+                        <div id="Counter_w"></div>
+                    </a>
+                </div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable({{ Counter_w|safe }});
+
+        var options = {
+          title: 'Counter'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('Counter_w'));
+
+        chart.draw(data, options);
+      }
+  </script>
+
+       {% endif %}
+         {% if Odometer_w %}
+                <div class="instrument">
+                    <a href="Odometer">
+
+                        <div id="Odometer_w"></div>
+                    </a>
+                </div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable({{ Odometer_w|safe }});
+
+        var options = {
+          title: 'Odometer'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('Odometer_w'));
+
+        chart.draw(data, options);
+      }
+  </script>
+
+       {% endif %}
+         {% if FuelMeter_w %}
+                <div class="instrument">
+                    <a href="FuelMeter">
+
+                        <div id="FuelMeter_w"></div>
+                    </a>
+                </div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable({{ FuelMeter_w|safe }});
+
+        var options = {
+          title: 'FuelMeter'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('FuelMeter_w'));
+
+        chart.draw(data, options);
+      }
+  </script>
+
+       {% endif %}
+         {% if Accounts_w %}
+                <div class="instrument">
+                    <a href="AssetMetric">
+
+                        <div id="Accounts_w"></div>
+                    </a>
+                </div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable({{ Accounts_w|safe }});
+
+        var options = {
+          title: 'Accounts'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('Accounts_w'));
+
+        chart.draw(data, options);
+      }
+  </script>
+
        {% endif %}
     </div>
-    <br>
     <div class='instruments'>
         <br>
         <h5> Attention Instruments</h5>
-       {% if attention %}
-            {% for i,j in attention %}
+                {% if Timer %}
                 <div class="instrument">
-                {% with instrument=j %}
-                    <a href="{{ j }}">
-                        <img src="{% static 'output/' %}{{ i }}.png"  alt="">
-                        <h6 >{{ j }}</h6>
+                    <a href="Timer">
+
+                        <div id="Timer"></div>
                     </a>
-                {% endwith %}
                 </div>
-            {% endfor %}
-       {% else %}
-            <h5 style="text-align: center">No data</h5>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable({{ Timer|safe }});
+      var view = new google.visualization.DataView(data);
+      var options = {
+        title: "Timer",
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:60 },
+        vAxis: {title: "Time"},
+        height: 500,
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("Timer"));
+      chart.draw(view, options);
+  }
+  </script>
+
        {% endif %}
-</div>
+                {% if Timer_w %}
+                <div class="instrument">
+                    <a href="Timer">
+
+                        <div id="Timer_w"></div>
+                    </a>
+                </div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable({{ Timer_w|safe }});
+
+        var options = {
+          title: 'Timer'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('Timer_w'));
+
+        chart.draw(data, options);
+      }
+  </script>
+
+       {% endif %}
+    </div>
     <br>
     <div class="focusbuttons">
         <div class="focusbutton">
