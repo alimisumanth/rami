@@ -21,7 +21,7 @@ app_name = 'Rami'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name="index"),
+    path('', views.upload, name="upload"),
     path('rami/', views.ramiParser, name="ramiParser"),
     path('rami/<mid>/', views.ramikpi, name="ramikpi"),
     path('rami/<mid>/<instrument>/', views.widgetkpi, name='widget'),

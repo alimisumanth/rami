@@ -16,9 +16,10 @@ instruments = {'WeighScale': 'Productivity', 'Counter': 'Productivity',
                'Odometer': 'Efficiency', 'Timer': 'Efficiency', 'FuelMeter': 'Efficiency',
                'AssetMetric': 'Accounts', 'AssetStatus': 'AssetTracker'}
 
-kpis = {"Productivity": ["Total Throughput", "Average Throughput"],
-        "Efficiency_odo": ["Total Distance", "Average Distance"],
-        "Efficiency_fuel": ["Total Fuel Efficiency", "Average Fuel Efficiency"],
+kpis = {"Productivity_Weigh": ['Total Weight Moved', 'Average Weight Moved'],
+        "Productivity_Counter": ['Total Items Moved', 'Average Items Moved'],
+        "Efficiency_odo": ["Total Distance Moved", "Average Distance Moved"],
+        "Efficiency_fuel": ["Total Fuel Consumed", "Average Fuel Consumed"],
         "Efficiency_Time": ["Total Time", "Average Time"],
         'Accounts': ['Total RepairCost', 'Average RepairCost'],
         'AssetTracker': ["AssetLifetime", 'AssetFailures', 'AssetRepairs']}
@@ -46,7 +47,10 @@ def signin(request):
     This method is used for user login
     """
     if request.user.is_authenticated:
-        return redirect('index')
+        if request.session['user'] == 'Alun':
+            return redirect('upload')
+        else:
+            return redirect('ramiParser')
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -57,7 +61,10 @@ def signin(request):
         else:
             login(request, user)
         request.session['user'] = username
-        return render(request, 'index.html', context={'user': user})
+        if username == 'Alun':
+            return redirect('upload')
+        else:
+            return redirect('ramiParser')
     return render(request, 'login.html')
 
 
@@ -68,29 +75,37 @@ def signOut(request):
         return redirect('login')
 
 
-def ramiParser(request):
+@login_required(login_url='login')
+def upload(request):
     if request.method == 'POST':
         file = request.FILES['rami']
-        with default_storage.open('uploads/' + file.name, 'wb+') as destination:
+        with default_storage.open('uploads/rami.xlsx', 'wb+') as destination:
             for chunk in file.chunks():
                 destination.write(chunk)
-        vertical, res = ramiXMLParser.parse(file.name)
-        summary = [f'Number of {i} = {res[i]}' for i in res]
-        devices = []
-        imgs = [str(i)[:-4] for i in os.listdir('static/images')]
-        new_device = []
-        for i in res:
-            if i not in imgs:
-                new_device.append(i)
-                continue
-            for j in range(int(res[i])):
-                devices.append(i)
-        random.shuffle(devices)
-        labels = ramiXMLParser.getLabels(devices)
-        devices = zip(devices, labels)
+        print('done')
+        return redirect('ramiParser')
+    return render(request, 'index.html')
 
-        return render(request, 'rami.html', context={'devices': devices, 'vertical': vertical, 'summary': summary,
-                                                     'new_device': ','.join(new_device)})
+
+@login_required(login_url='login')
+def ramiParser(request):
+    vertical, res = ramiXMLParser.parse()
+    summary = [f'Number of {i} = {res[i]}' for i in res]
+    devices = []
+    imgs = [str(i)[:-4] for i in os.listdir('static/images')]
+    new_device = []
+    for i in res:
+        if i not in imgs:
+            new_device.append(i)
+            continue
+        for j in range(int(res[i])):
+            devices.append(i)
+    random.shuffle(devices)
+    labels = ramiXMLParser.getLabels(devices)
+    devices = zip(devices, labels)
+
+    return render(request, 'rami.html', context={'devices': devices, 'vertical': vertical, 'summary': summary,
+                                                 'new_device': ','.join(new_device)})
 
 
 def ramikpi(request, mid):
@@ -171,17 +186,23 @@ def widgetkpi(request, mid, instrument):
             tkpis = kpis['Efficiency_fuel']
         elif instrument == 'Timer':
             tkpis = kpis['Efficiency_Time']
+        elif instrument == 'WeighScale':
+            tkpis = kpis['Productivity_Weigh']
+        elif instrument == 'Counter':
+            tkpis = kpis['Productivity_Counter']
         else:
             tkpis = kpis[okr]
         skpi = kpi
         if kpi.find('Total') >= 0:
             kpi = kpi.replace('Total ', '')
-            if instrument == 'WeighScale' and kpi == 'Throughput':
+            if instrument == 'WeighScale':
                 col = "Weight (Tons)"
-            elif instrument == 'Counter' and kpi == 'Throughput':
+            elif instrument == 'Counter':
                 col = 'ItemCount'
-            elif kpi == 'Fuel Efficiency':
+            elif kpi == 'Fuel Consumed':
                 col = 'FuelConsumption'
+            elif instrument == 'Odometer':
+                col = 'Distance'
             elif kpi == 'Time':
                 col = 'Elapsed_Sec'
             else:
@@ -193,29 +214,56 @@ def widgetkpi(request, mid, instrument):
                 graph = cockpitWeeklyPlots([col])[col]
         if kpi.find('Average') >= 0:
             kpi = kpi.replace('Average ', '')
-            if kpi == 'Throughput' and instrument == 'WeighScale':
+            if instrument == 'WeighScale':
                 col = 'Weight (Tons)'
-            elif kpi == 'Throughput' and instrument == 'Counter':
+            elif instrument == 'Counter':
                 col = 'ItemCount'
-            elif kpi == 'Fuel Efficiency':
+            elif instrument == 'Odometer':
+                col = 'Distance'
+            elif kpi == 'Fuel Consumed':
                 col = 'FuelConsumption'
             elif kpi == 'Time':
                 col = 'Elapsed_Sec'
             else:
-                col=kpi
+                col = kpi
             if time == 'day':
                 graph = wigetDailyPlots(col)
             else:
                 df = pd.read_csv('outputdf.csv')
-                data = df[col][8] / 8
+                if col == 'ItemCount':
+                    data = int(df[col][8] / 8)
+                else:
+                    data = round(df[col][8] / 8, 2)
                 color = getColor(col)
+                if instrument == 'WeighScale':
+                    units = 'Tons / Week'
+                elif instrument == 'Counter':
+                    units = 'per week'
+                    data = int(data)
+                elif instrument == 'Odometer':
+                    units = 'KM/Week'
+                elif instrument == 'FuelMeter':
+                    units = 'Kwh per week'
+                elif instrument == 'Timer':
+                    units = 'seconds / week'
+                elif instrument == 'AssetMetric':
+                    units = 'per week'
+                kpis_ = [skpi]
+                for i in tkpis:
+                    if i not in kpis_:
+                        kpis_.append(i)
 
-                context = {'instrument': instrument, 'okr': okr, 'kpi': tkpis, 'skpi': skpi, 'data': data,
-                           'color': color}
+                context = {'instrument': instrument, 'okr': okr, 'kpi': kpis_, 'skpi': skpi, 'data': data,
+                           'color': color, "units": units}
                 return render(request, 'widgetkpi.html', context)
         color = getColor(col)
-        context = {'instrument': instrument, 'okr': okr, 'kpi': tkpis, 'skpi': skpi, 'graph': graph,
-                   'time': time, 'color': color}
+        kpis_ = [skpi]
+        for i in tkpis:
+            if i not in kpis_:
+                kpis_.append(i)
+
+        context = {'instrument': instrument, 'okr': okr, 'kpi': kpis_, 'skpi': skpi, 'graph': graph,
+                   'time': time, 'color': color, "col": col}
         return render(request, 'widgetkpi.html', context)
     okr = instruments[instrument]
     if instrument == 'Odometer':
@@ -224,6 +272,10 @@ def widgetkpi(request, mid, instrument):
         kpi = kpis['Efficiency_fuel']
     elif instrument == 'Timer':
         kpi = kpis['Efficiency_Time']
+    elif instrument == 'WeighScale':
+        kpi = kpis['Productivity_Weigh']
+    elif instrument == 'Counter':
+        kpi = kpis['Productivity_Counter']
     else:
         kpi = kpis[okr]
 

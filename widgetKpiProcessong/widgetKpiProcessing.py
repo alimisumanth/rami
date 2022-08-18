@@ -29,6 +29,10 @@ def wigetDailyPlots(column):
     df = pd.read_csv('outputdf.csv')
     average = df[column] / 8
     data = average[:8]
+    if column=='ItemCount':
+        data = data.apply(lambda x: int(x))
+    else:
+        data = data.apply(lambda x: round(x,2))
     df = df.iloc[:8, :]
     df['StartDate'] = df['StartDate'].apply(lambda x: x.split(' ')[0])
     result=[[df['StartDate'][j], data[j]] for j in range(df.shape[0])][::-1]

@@ -38,8 +38,8 @@ def getVertical(obj):
     return root, vertical
 
 
-def parse(document):
-    path = f'uploads/{document}'
+def parse():
+    path = f'uploads/rami.xlsx'
 
     document = ET.parse(path)
 

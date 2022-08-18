@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<form name="form1" id="form1" enctype="multipart/form-data" method="post" action="{% url 'ramiParser' %}">
+<form name="form1" id="form1" enctype="multipart/form-data" method="post" action="{% url 'upload' %}">
     {% csrf_token %}
      <input type="file"
             name="rami"
