@@ -1,9 +1,0 @@
-<business vertical = "Manufacturing">
-<asset items = "4">
-<Item count = "5">Motors</Item>
-<Item count = "12">RoboticArms</Item>
-<Item count = "3">RollerBelts</Item>
-<Item count = "2">Boiler</Item>
-<Item count = "2">Doren</Item>
-</asset>
-</business>
