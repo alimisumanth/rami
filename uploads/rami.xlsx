@@ -1,0 +1,7 @@
+<business vertical = "Port">
+<asset items = "3">
+<Item count = "2">Berths</Item>
+<Item count = "2">QuayCranes</Item>
+<Item count = "1">Trucks</Item>
+</asset>
+</business>
