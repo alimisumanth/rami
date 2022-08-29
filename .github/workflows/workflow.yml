@@ -50,7 +50,7 @@ jobs:
         #Replace the values here with your names you submitted in one of 
         #The previous sections
         application_name: rami
-        environment_name: Rami-env
+        environment_name: rami
         
         #The version number could be anything. You can find a dynamic way 
         #Of doing this.
