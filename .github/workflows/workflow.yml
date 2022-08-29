@@ -50,10 +50,10 @@ jobs:
         #Replace the values here with your names you submitted in one of 
         #The previous sections
         application_name: rami
-        environment_name: rami
+        environment_name: Rami-env
         
         #The version number could be anything. You can find a dynamic way 
         #Of doing this.
-        version_label: 12347
+        version_label: 12342
         region: "us-east-2"
         deployment_package: deploy.zip
