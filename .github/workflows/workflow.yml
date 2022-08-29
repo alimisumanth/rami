@@ -43,17 +43,17 @@ jobs:
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v20
       with:
-        // Remember the secrets we embedded? this is how we access them
+        #Remember the secrets we embedded? this is how we access them
         aws_access_key: ${{ secrets.Actions.AWS_ACCESS_KEY_ID }}
         aws_secret_key: ${{ secrets.Actions.AWS_SECRET_ACCESS_KEY }}
         
-        // Replace the values here with your names you submitted in one of 
-        // The previous sections
+        #Replace the values here with your names you submitted in one of 
+        #The previous sections
         application_name: rami
         environment_name: Rami-env
         
-        // The version number could be anything. You can find a dynamic way 
-        // Of doing this.
+        #The version number could be anything. You can find a dynamic way 
+        #Of doing this.
         version_label: 12348
         region: "us-east-2"
         deployment_package: deploy.zip
