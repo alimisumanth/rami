@@ -1,8 +1,0 @@
-<business vertical = 'Buildings'>
-<asset items ='4'>
-<Item count = '2'>SecurityDevices</Item>
-<Item count = '6'>Appliances</Item>
-<Item count = '44'>Lighting</Item>
-<Item count = '4'>Heating</Item>
-</asset>
-</business>

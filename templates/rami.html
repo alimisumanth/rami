@@ -9,10 +9,15 @@
     <h3 >{{ i }}</h3>
 {% endfor %}
 {% endif %}
-<div style="background-image: url('{% static "images/"%}{{ vertical }}.png') ; padding-top: 20px;padding-left:10px;padding-right: 10px ">
+<div style="padding-top: 20px;padding-left:10px;padding-right: 10px ">
 {% if devices %}
     {% for i,j in devices %}
-        <a href="{{ j }}"> <img src=" {% static 'images/' %}{{ i }}.png " style=";" alt= "{{ i }}" title="{{ j }}"></a>
+<div style="display: inline-block">
+        <a href="{{ j }}">
+            <img src=" {% static 'images/' %}{{ i }}.png " style=";" alt= "{{ i }}" title="{{ j }}">
+            <h6 style="text-align: center">{{ j }}</h6>
+        </a>
+</div>
     {% endfor %}
 {% endif %}
 {% if new_device %}

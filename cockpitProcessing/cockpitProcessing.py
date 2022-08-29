@@ -28,7 +28,8 @@ def compute(machine_id):
     df_new = df.groupby(['machine_id', 'StartDate'])[['Elapsed_Sec',
                                                       'Distance',
                                                       'ItemCount', 'Weight (Tons)',
-                                                      'FuelConsumption', 'RepairCost']].sum().loc[machine_id, :]
+                                                      'FuelConsumption', 'RepairCost',
+                                                      'AssetFailures', 'AssetRepairTime']].sum().loc[machine_id, :]
     df_new.loc['Total'] = df_new.sum(axis=0)
     df_new.to_csv('outputdf.csv')
     return df_new

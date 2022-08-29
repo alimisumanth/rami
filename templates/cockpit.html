@@ -40,9 +40,9 @@
       var view = new google.visualization.DataView(data);
       var options = {
         title: "WeighScale",
-        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:60 },
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:45 },
         vAxis: {title: "Weights"},
-        height: 500,
+        height: 550,
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
       };
@@ -68,9 +68,9 @@
       var view = new google.visualization.DataView(data);
       var options = {
         title: "Counter",
-        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:60 },
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:45 },
         vAxis: {title: "ItemCount"},
-        height: 500,
+        height: 550,
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
       };
@@ -96,9 +96,9 @@
       var view = new google.visualization.DataView(data);
       var options = {
         title: "Odometer",
-        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:60 },
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:45 },
         vAxis: {title: "Distance"},
-        height: 500,
+        height: 550,
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
       };
@@ -124,9 +124,9 @@
       var view = new google.visualization.DataView(data);
       var options = {
         title: "FuelMeter",
-        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:60 },
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:45 },
         vAxis: {title: "Fuel"},
-        height: 500,
+        height: 550,
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
       };
@@ -152,13 +152,69 @@
       var view = new google.visualization.DataView(data);
       var options = {
         title: "Accounts",
-        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:60 },
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:45 },
         vAxis: {title: "Cost"},
-        height: 500,
+        height: 550,
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
       };
       var chart = new google.visualization.ColumnChart(document.getElementById("Accounts"));
+      chart.draw(view, options);
+  }
+  </script>
+
+       {% endif %}
+        {% if AssetFailures %}
+                <div class="instrument">
+                    <a href="AssetTracker">
+
+                        <div id="AssetFailures"></div>
+                    </a>
+                </div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable({{ AssetFailures|safe }});
+      var view = new google.visualization.DataView(data);
+      var options = {
+        title: "AssetFailures",
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:45 },
+        vAxis: {title: "FailureCount"},
+        height: 550,
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("AssetFailures"));
+      chart.draw(view, options);
+  }
+  </script>
+
+       {% endif %}
+        {% if AssetRepairTime %}
+                <div class="instrument">
+                    <a href="AssetTracker">
+
+                        <div id="AssetTracker"></div>
+                    </a>
+                </div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+    google.charts.load("current", {packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable({{ AssetRepairTime|safe }});
+      var view = new google.visualization.DataView(data);
+      var options = {
+        title: "AssetRepairTime",
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:45 },
+        vAxis: {title: "Repair Time"},
+        height: 550,
+        bar: {groupWidth: "95%"},
+        legend: { position: "none" },
+      };
+      var chart = new google.visualization.ColumnChart(document.getElementById("AssetTracker"));
       chart.draw(view, options);
   }
   </script>
@@ -299,6 +355,60 @@
   </script>
 
        {% endif %}
+         {% if AssetFailures_w %}
+                <div class="instrument">
+                    <a href="AssetTracker">
+
+                        <div id="AssetTracker_w"></div>
+                    </a>
+                </div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable({{ AssetFailures_w|safe }});
+
+        var options = {
+          title: 'AssetFailures'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('AssetTracker_w'));
+
+        chart.draw(data, options);
+      }
+  </script>
+
+       {% endif %}
+         {% if AssetRepairTime_w %}
+                <div class="instrument">
+                    <a href="AssetTracker">
+
+                        <div id="AssetRepairTime_w"></div>
+                    </a>
+                </div>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            <script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+        var data = google.visualization.arrayToDataTable({{ AssetRepairTime_w|safe }});
+
+        var options = {
+          title: 'Asset Repair Time'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('AssetRepairTime_w'));
+
+        chart.draw(data, options);
+      }
+  </script>
+
+       {% endif %}
     </div>
     <div class='instruments'>
         <br>
@@ -319,9 +429,9 @@
       var view = new google.visualization.DataView(data);
       var options = {
         title: "Timer",
-        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:60 },
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:45 },
         vAxis: {title: "Time"},
-        height: 500,
+        height: 550,
         bar: {groupWidth: "95%"},
         legend: { position: "none" },
       };

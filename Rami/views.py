@@ -14,7 +14,7 @@ import json
 
 instruments = {'WeighScale': 'Productivity', 'Counter': 'Productivity',
                'Odometer': 'Efficiency', 'Timer': 'Efficiency', 'FuelMeter': 'Efficiency',
-               'AssetMetric': 'Accounts', 'AssetStatus': 'AssetTracker'}
+               'AssetMetric': 'Accounts', 'AssetTracker': 'C&B'}
 
 kpis = {"Productivity_Weigh": ['Total Weight Moved', 'Average Weight Moved'],
         "Productivity_Counter": ['Total Items Moved', 'Average Items Moved'],
@@ -22,7 +22,7 @@ kpis = {"Productivity_Weigh": ['Total Weight Moved', 'Average Weight Moved'],
         "Efficiency_fuel": ["Total Fuel Consumed", "Average Fuel Consumed"],
         "Efficiency_Time": ["Total Time", "Average Time"],
         'Accounts': ['Total RepairCost', 'Average RepairCost'],
-        'AssetTracker': ["AssetLifetime", 'AssetFailures', 'AssetRepairs']}
+        'AssetTracker': ['AssetFailures', 'AssetRepairTime']}
 
 
 def signUp(request):
@@ -118,12 +118,14 @@ def ramikpi(request, mid):
             request.session['time'] = time
             if time == 'day':
                 if request.session['user'] == 'Alun':
-                    columns = ['RepairCost']
+                    columns = ['RepairCost', 'AssetFailures', 'AssetRepairTime']
                     res = cockpitDailyPlots(columns)
                     focus_text = focusbuttons(columns)
                     return render(request, 'cockpit.html',
                                   {"kpi": mid,
                                    'Accounts': res['RepairCost'],
+                                   'AssetFailures': res['AssetFailures'],
+                                   'AssetRepairTime': res['AssetRepairTime'],
                                    'display': True,
                                    'focus_text': focus_text,
                                    })
@@ -143,12 +145,14 @@ def ramikpi(request, mid):
                                    })
             else:
                 if request.session['user'] == 'Alun':
-                    columns = ['RepairCost']
+                    columns = ['RepairCost', 'AssetFailures', 'AssetRepairTime']
                     res = cockpitWeeklyPlots(columns)
                     focus_text = focusbuttons(columns)
                     return render(request, 'cockpit.html',
                                   {"kpi": mid,
                                    'Accounts_w': res['RepairCost'],
+                                   'AssetFailures_w': res['AssetFailures'],
+                                   'AssetRepairTime_w': res['AssetRepairTime'],
                                    'display': True,
                                    'focus_text': focus_text,
                                    })
@@ -190,9 +194,12 @@ def widgetkpi(request, mid, instrument):
             tkpis = kpis['Productivity_Weigh']
         elif instrument == 'Counter':
             tkpis = kpis['Productivity_Counter']
+        elif instrument == 'AssetTracker':
+            tkpis = kpis['AssetTracker']
         else:
             tkpis = kpis[okr]
         skpi = kpi
+        col = kpi
         if kpi.find('Total') >= 0:
             kpi = kpi.replace('Total ', '')
             if instrument == 'WeighScale':
@@ -207,11 +214,6 @@ def widgetkpi(request, mid, instrument):
                 col = 'Elapsed_Sec'
             else:
                 col = kpi
-
-            if time == 'day':
-                graph = cockpitDailyPlots([col])[col]
-            else:
-                graph = cockpitWeeklyPlots([col])[col]
         if kpi.find('Average') >= 0:
             kpi = kpi.replace('Average ', '')
             if instrument == 'WeighScale':
@@ -256,6 +258,10 @@ def widgetkpi(request, mid, instrument):
                 context = {'instrument': instrument, 'okr': okr, 'kpi': kpis_, 'skpi': skpi, 'data': data,
                            'color': color, "units": units}
                 return render(request, 'widgetkpi.html', context)
+        if time == 'day':
+            graph = cockpitDailyPlots([col])[col]
+        else:
+            graph = cockpitWeeklyPlots([col])[col]
         color = getColor(col)
         kpis_ = [skpi]
         for i in tkpis:
@@ -276,6 +282,8 @@ def widgetkpi(request, mid, instrument):
         kpi = kpis['Productivity_Weigh']
     elif instrument == 'Counter':
         kpi = kpis['Productivity_Counter']
+    elif instrument == 'AssetTracker':
+        kpi = kpis['AssetTracker']
     else:
         kpi = kpis[okr]
 

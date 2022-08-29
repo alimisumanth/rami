@@ -48,7 +48,7 @@
       var view = new google.visualization.DataView(data);
       var options = {
         title: "{{ skpi }}",
-        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:60 },
+        hAxis: {title: "Date" , direction:-1, slantedText:true, slantedTextAngle:45 },
         vAxis: {title: "{{ col }}"},
         height: 500,
         bar: {groupWidth: "95%"},
@@ -74,7 +74,7 @@
         var data = google.visualization.arrayToDataTable({{ graph|safe }});
 
         var options = {
-          title: 'FuelMeter',
+          title: '{{ skpi }}',
             width:300,
         };
 
